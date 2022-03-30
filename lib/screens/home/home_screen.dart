@@ -9,6 +9,7 @@ import 'package:korba_practical/constants.dart';
 import 'package:korba_practical/helpers.dart';
 import 'package:korba_practical/providers/users_provider.dart';
 import 'package:korba_practical/screens/auth/sign_in_screen.dart';
+import 'package:korba_practical/screens/users/user_details_screen.dart';
 import 'package:korba_practical/services/shared_preference_store.dart';
 import 'package:korba_practical/services/users_api_requests.dart';
 import 'package:korba_practical/widgets/shared_widgets/custom_input_field.dart';
@@ -796,9 +797,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   child: ListTile(
-                    onTap: () {
-                      log(_usersList![index].toString());
-                    },
+                    onTap: () => Navigator.pushNamed(
+                      context,
+                      UserDetailsScreen.routeName,
+                      arguments: _usersList![index],
+                    ),
                     tileColor: whiteColor,
                     contentPadding: EdgeInsets.symmetric(
                       vertical: 0,

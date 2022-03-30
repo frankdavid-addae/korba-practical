@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:korba_practical/screens/auth/sign_in_screen.dart';
 import 'package:korba_practical/screens/auth/sign_up_screen.dart';
 import 'package:korba_practical/screens/home/home_screen.dart';
+import 'package:korba_practical/screens/users/user_details_screen.dart';
 import 'package:page_transition/page_transition.dart';
 
 class RouteGenerator {
@@ -39,6 +40,16 @@ class RouteGenerator {
         return PageTransition(
           type: PageTransitionType.rightToLeft,
           child: const SignInScreen(),
+          duration: Duration(milliseconds: 100),
+          reverseDuration: Duration(milliseconds: 100),
+        );
+
+      case UserDetailsScreen.routeName:
+        return PageTransition(
+          type: PageTransitionType.rightToLeft,
+          child: UserDetailsScreen(
+            userDetails: args as Map<String, dynamic>,
+          ),
           duration: Duration(milliseconds: 100),
           reverseDuration: Duration(milliseconds: 100),
         );
