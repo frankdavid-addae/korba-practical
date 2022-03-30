@@ -111,7 +111,8 @@ class UsersApiRequest {
     }
   }
 
-  Future<dynamic> updateUser(BuildContext context, String token, int id) async {
+  Future<dynamic> updateUser(
+      BuildContext context, String token, int id, var input) async {
     Map<String, String> requestHeaders = {
       'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
@@ -120,14 +121,14 @@ class UsersApiRequest {
       final url = Uri.parse(usersBaseUrl + '/$id');
 
       var response = await http
-          .put(url, headers: requestHeaders)
+          .put(url, headers: requestHeaders, body: jsonEncode(input))
           .timeout(Duration(seconds: Helpers.timeOutSeconds));
       var decodedData = jsonDecode(response.body);
 
       // log(decodedData.toString());
 
       if (response.statusCode == 200) {
-        // log('Deleted');
+        // log('Updated');
         return 'success';
       } else {
         return decodedData;

@@ -26,9 +26,12 @@ Future<void> main() async {
   await _sharedPrefStore.reloadData();
   Map<String, dynamic>? authUserData =
       await _sharedPrefStore.retrieveDecodeData('authUserData');
+
+  var isLoggedIn = (await _sharedPrefStore.retrieveStringData('token') == null)
+      ? false
+      : true;
   List? usersData =
       await _sharedPrefStore.retrieveDecodeDynamicData('usersData');
-  print(usersData);
 
   runApp(
     MultiProvider(
@@ -43,13 +46,15 @@ Future<void> main() async {
               UsersProvider(UsersModel.fromJson(usersData ?? [])),
         ),
       ],
-      child: const KorbaPracticalApp(),
+      child: KorbaPracticalApp(isLoggedIn: isLoggedIn),
     ),
   );
 }
 
 class KorbaPracticalApp extends StatelessWidget {
-  const KorbaPracticalApp({Key? key}) : super(key: key);
+  const KorbaPracticalApp({Key? key, this.isLoggedIn}) : super(key: key);
+
+  final bool? isLoggedIn;
 
   @override
   Widget build(BuildContext context) {
@@ -72,19 +77,19 @@ class KorbaPracticalApp extends StatelessWidget {
           ResponsiveBreakpoint.autoScale(1200, name: TABLET),
         ],
       ),
-      initialRoute: SignInScreen.routeName,
+      initialRoute: _initialRoute(isLoggedIn!),
       onGenerateRoute: RouteGenerator.generateRoute,
       navigatorKey: RouteGenerator.navigatorKey,
     );
   }
 
-  // String _initialRoute(bool isLoggedIn) {
-  //   String routeName;
-  //   if (isLoggedIn) {
-  //     routeName = HomeScreen.routeName;
-  //   } else {
-  //     routeName = SignInScreen.routeName;
-  //   }
-  //   return routeName;
-  // }
+  String _initialRoute(bool isLoggedIn) {
+    String routeName;
+    if (isLoggedIn) {
+      routeName = HomeScreen.routeName;
+    } else {
+      routeName = SignInScreen.routeName;
+    }
+    return routeName;
+  }
 }

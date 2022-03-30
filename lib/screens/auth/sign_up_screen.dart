@@ -70,16 +70,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(
                 height: mediaQueryHeight * 0.15,
                 width: mediaQueryWidth * 0.5,
-                child: const Placeholder(),
-                // Image.asset(
-                //   'assets/images/sage_logo.png',
-                //   fit: BoxFit.contain,
-                // ),
+                child: Image.asset(
+                  'assets/images/korba-logo.png',
+                  fit: BoxFit.contain,
+                ),
               ),
               SizedBox(
                 height: Constant.kSize(mediaQueryHeight, 100.0, 110.0, 100.0),
               ),
-              // Sign In Form
+              // Sign Up Form
               Form(
                 key: _signUpFormKey,
                 autovalidateMode: _autoValidate,

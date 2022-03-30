@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get_it/get_it.dart';
@@ -10,6 +11,7 @@ import 'package:korba_practical/providers/users_provider.dart';
 import 'package:korba_practical/screens/auth/sign_in_screen.dart';
 import 'package:korba_practical/services/shared_preference_store.dart';
 import 'package:korba_practical/services/users_api_requests.dart';
+import 'package:korba_practical/widgets/shared_widgets/custom_input_field.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -23,9 +25,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _usersApiRequest = GetIt.I.get<UsersApiRequest>();
+  final _updateFormKey = GlobalKey<FormState>();
   final _keyLoader = GlobalKey<State>();
   final _feedbackDialog = GetIt.I.get<FeedbackDialog>();
   final _sharedPrefStore = GetIt.I.get<SharedPrefStore>();
+  late TextEditingController _fullNameController;
+  late TextEditingController _emailController;
+  late TextEditingController _locationController;
+  AutovalidateMode _autoValidate = AutovalidateMode.disabled;
+  bool isHidden = true;
+  bool btnUpdateEnabled = true;
 
   getUserData() async {
     var token = await _sharedPrefStore.retrieveStringData('token');
@@ -36,6 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     getUserData();
+    // Initialize controllers
+    _fullNameController = TextEditingController();
+    _emailController = TextEditingController();
+    _locationController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _fullNameController.dispose();
+    _emailController.dispose();
+    _locationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -47,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // log(_usersModel.users.toString());
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       backgroundColor: silverSandColor,
       appBar: AppBar(
         backgroundColor: eerieBlackColor,
@@ -100,7 +122,269 @@ class _HomeScreenState extends State<HomeScreen> {
                     motion: const ScrollMotion(),
                     children: [
                       SlidableAction(
-                        onPressed: (context) {},
+                        onPressed: (context) {
+                          setState(() {
+                            _fullNameController.text =
+                                _usersList![index]['name'];
+                            _emailController.text = _usersList[index]['email'];
+                            _locationController.text =
+                                _usersList[index]['location'];
+                          });
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.transparent,
+                                elevation: 0.0,
+                                contentPadding: const EdgeInsets.fromLTRB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                titlePadding: const EdgeInsets.fromLTRB(
+                                    0.0, 0.0, 0.0, 0.0),
+                                content: Container(
+                                  padding: EdgeInsets.only(
+                                    top: 20 * multiplier * mediaQueryHeight,
+                                    left: 15 * multiplier * mediaQueryHeight,
+                                    right: 15 * multiplier * mediaQueryHeight,
+                                  ),
+                                  height: Constant.kSize(
+                                      mediaQueryHeight, 350.0, 350.0, 370.0),
+                                  width: 150 * multiplier * mediaQueryHeight,
+                                  decoration: BoxDecoration(
+                                    color: whiteColor,
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // SizedBox(
+                                      //     height: 20.0 *
+                                      //         multiplier *
+                                      //         mediaQueryHeight),
+                                      Form(
+                                        key: _updateFormKey,
+                                        autovalidateMode: _autoValidate,
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            children: [
+                                              CustomInputField(
+                                                hintText: 'Full Name',
+                                                controller: _fullNameController,
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                suffixIcon: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Icon(
+                                                    Icons.person,
+                                                    color: eerieBlackColor,
+                                                    size: Constant.kSize(
+                                                        mediaQueryHeight,
+                                                        28.0,
+                                                        26.0,
+                                                        24.0),
+                                                  ),
+                                                ),
+                                                validator: (String? value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Full Name field is required';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              CustomInputField(
+                                                hintText: 'Email Address',
+                                                controller: _emailController,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                suffixIcon: Padding(
+                                                  padding: const EdgeInsets.all(
+                                                      12.0),
+                                                  child: Icon(
+                                                    Icons.email,
+                                                    color: eerieBlackColor,
+                                                    size: Constant.kSize(
+                                                        mediaQueryHeight,
+                                                        28.0,
+                                                        26.0,
+                                                        24.0),
+                                                  ),
+                                                ),
+                                                validator: (String? value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Email address field is required';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                              CustomInputField(
+                                                hintText: 'Location',
+                                                controller: _locationController,
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                fillColor: whiteColor,
+                                                suffixIcon: Icon(
+                                                  Icons.location_pin,
+                                                  size: Constant.kSize(
+                                                      mediaQueryHeight,
+                                                      28.0,
+                                                      26.0,
+                                                      24.0),
+                                                  color: eerieBlackColor,
+                                                ),
+                                                validator: (String? value) {
+                                                  if (value!.isEmpty) {
+                                                    return 'Location field is required';
+                                                  }
+                                                  return null;
+                                                },
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        height: 10.0 *
+                                            multiplier *
+                                            mediaQueryHeight,
+                                      ),
+                                      Container(
+                                        alignment: Alignment.center,
+                                        height: 35.0 *
+                                            multiplier *
+                                            mediaQueryHeight,
+                                        // width: Constant.kSize(mediaQueryHeight, 95.0, 85.0),
+                                        decoration: BoxDecoration(
+                                          // color: Theme.of(context).primaryColor,
+                                          borderRadius:
+                                              BorderRadius.circular(4.0),
+                                        ),
+                                        child: OutlinedButton(
+                                          onPressed: btnUpdateEnabled
+                                              ? () async {
+                                                  if (_updateFormKey
+                                                      .currentState!
+                                                      .validate()) {
+                                                    var _token =
+                                                        await _sharedPrefStore
+                                                            .retrieveStringData(
+                                                                'token');
+                                                    _toggleButtonState(false);
+                                                    _feedbackDialog
+                                                        .loadingDialog(context,
+                                                            _keyLoader);
+
+                                                    if (await ConnectivityWrapper
+                                                        .instance.isConnected) {
+                                                      var input = {
+                                                        "id": _usersList![index]
+                                                            ['id'],
+                                                        "name":
+                                                            _fullNameController
+                                                                .text,
+                                                        "email":
+                                                            _emailController
+                                                                .text,
+                                                        "location":
+                                                            _locationController
+                                                                .text,
+                                                      };
+
+                                                      var result =
+                                                          await _usersApiRequest
+                                                              .updateUser(
+                                                        context,
+                                                        _token!,
+                                                        _usersList[index]['id'],
+                                                        input,
+                                                      );
+                                                      if (result == 'success') {
+                                                        var usersResult =
+                                                            await _usersApiRequest
+                                                                .getAllUsers(
+                                                                    context,
+                                                                    _token,
+                                                                    1);
+
+                                                        if (usersResult !=
+                                                            null) {
+                                                          Navigator.of(
+                                                            _keyLoader
+                                                                .currentContext!,
+                                                            rootNavigator: true,
+                                                          ).pop();
+
+                                                          _toggleButtonState(
+                                                              true);
+
+                                                          Navigator.of(context)
+                                                              .pop(DialogAction
+                                                                  .abort);
+                                                        }
+                                                      } else {
+                                                        await Future.delayed(
+                                                          Duration(
+                                                              milliseconds: Helpers
+                                                                  .milliSeconds),
+                                                        );
+                                                        Navigator.of(
+                                                          _keyLoader
+                                                              .currentContext!,
+                                                          rootNavigator: true,
+                                                        ).pop();
+                                                        _feedbackDialog
+                                                            .errorDialog(
+                                                          context,
+                                                          result.toString(),
+                                                        );
+                                                        _toggleButtonState(
+                                                            true);
+                                                      }
+                                                    } else {
+                                                      await Future.delayed(
+                                                        Duration(
+                                                            milliseconds: Helpers
+                                                                .milliSeconds),
+                                                      );
+                                                      Navigator.of(
+                                                        _keyLoader
+                                                            .currentContext!,
+                                                        rootNavigator: true,
+                                                      ).pop();
+                                                      _feedbackDialog
+                                                          .internetError(
+                                                              context);
+                                                      _toggleButtonState(true);
+                                                    }
+                                                  } else {
+                                                    setState(() => _autoValidate =
+                                                        AutovalidateMode
+                                                            .onUserInteraction);
+                                                  }
+                                                }
+                                              : () {},
+                                          style: OutlinedButton.styleFrom(
+                                            backgroundColor: eerieBlackColor,
+                                            side: BorderSide.none,
+                                          ),
+                                          child: Text(
+                                            'Update',
+                                            style: smallTextStyle.copyWith(
+                                              fontSize: 15.0 *
+                                                  multiplier *
+                                                  mediaQueryHeight,
+                                              color: whiteColor,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                         backgroundColor: neonGreenColor,
                         foregroundColor: whiteColor,
                         icon: Icons.edit,
@@ -346,5 +630,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+
+  void _toggleButtonState(bool state) {
+    setState(() => btnUpdateEnabled = state);
   }
 }
