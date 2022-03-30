@@ -113,7 +113,7 @@ class FeedbackDialog {
               children: const <Widget>[
                 Center(
                   child: SpinKitDoubleBounce(
-                    color: darkJungleGreenColor,
+                    color: eerieBlackColor,
                     size: 50.0,
                   ),
                 ),

@@ -63,7 +63,7 @@ class InternetErrorModal extends StatelessWidget {
             child: OutlinedButton(
               onPressed: onPressed,
               style: OutlinedButton.styleFrom(
-                backgroundColor: darkJungleGreenColor,
+                backgroundColor: eerieBlackColor,
                 side: BorderSide.none,
               ),
               child: Text(

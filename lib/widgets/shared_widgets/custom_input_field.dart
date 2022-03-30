@@ -56,7 +56,7 @@ class CustomInputField extends StatelessWidget {
         textAlign: textAlign,
         style: smallTextStyle.copyWith(
           fontSize: Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
-          color: darkJungleGreenColor,
+          color: eerieBlackColor,
         ),
         validator: validator,
         onChanged: onChanged,
@@ -65,7 +65,7 @@ class CustomInputField extends StatelessWidget {
         controller: controller,
         inputFormatters: inputFormatters,
         cursorHeight: Constant.kSize(mediaQueryHeight, 24.0, 22.0, 20.0),
-        cursorColor: darkJungleGreenColor,
+        cursorColor: eerieBlackColor,
         cursorWidth: 2.0,
         maxLength: maxLength,
         decoration: InputDecoration(
@@ -74,7 +74,7 @@ class CustomInputField extends StatelessWidget {
           suffixIcon: suffixIcon,
           hintStyle: smallTextStyle.copyWith(
             fontSize: Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
-            color: darkJungleGreenColor,
+            color: eerieBlackColor,
           ),
           counterText: '',
           helperText: ' ',

@@ -6,10 +6,10 @@ class Helpers {
 
   static int get milliSeconds => 500;
 
-  static void logout() async {
+  static void signOut() async {
     final _sharedPrefStore = GetIt.I.get<SharedPrefStore>();
     await _sharedPrefStore.removeStoredData('token');
-    await _sharedPrefStore.removeStoredData('employeeData');
+    await _sharedPrefStore.removeStoredData('authUserData');
     await _sharedPrefStore.removeAll();
   }
 }

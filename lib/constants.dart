@@ -29,7 +29,7 @@ const silverSandColor = Color(0xFFC8CACB);
 const graniteGrayColor = Color(0xFF5F646A);
 const redMunsellColor = Color(0xFFED1944);
 const neonGreenColor = Color(0xFF42EC18);
-const darkJungleGreenColor = Color(0xFF051101);
+const eerieBlackColor = Color(0xFF1B1C1E);
 
 class ImageStrings {
   // static String topRightCornerImg = 'assets/images/top_right_corner.png';

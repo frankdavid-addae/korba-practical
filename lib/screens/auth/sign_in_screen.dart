@@ -90,7 +90,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         padding: const EdgeInsets.all(12.0),
                         child: Icon(
                           Icons.email,
-                          color: darkJungleGreenColor,
+                          color: eerieBlackColor,
                           size: Constant.kSize(
                               mediaQueryHeight, 28.0, 26.0, 24.0),
                         ),
@@ -123,7 +123,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 size: Constant.kSize(
                                     mediaQueryHeight, 28.0, 26.0, 24.0),
                               ),
-                        color: darkJungleGreenColor,
+                        color: eerieBlackColor,
                         splashColor: Colors.transparent,
                       ),
                       validator: (String? value) {
@@ -150,7 +150,6 @@ class _SignInScreenState extends State<SignInScreen> {
                             var input = {
                               "email": _emailController.text,
                               "password": _passwordController.text,
-                              "push_notification_token": "token_goes_here",
                             };
 
                             var result =
@@ -199,7 +198,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     : () {},
                 elevation: 2.0,
                 text: 'SIGN IN',
-                color: darkJungleGreenColor,
+                color: eerieBlackColor,
                 textStyle: smallTextStyle.copyWith(
                   color: whiteColor,
                   fontSize: Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
@@ -215,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   child: Text(
                     'Forgot Password?',
                     style: smallTextStyle.copyWith(
-                      color: darkJungleGreenColor,
+                      color: eerieBlackColor,
                       fontSize:
                           Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
                     ),
@@ -236,7 +235,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     text: TextSpan(
                       text: 'Don\'t have an account? ',
                       style: smallTextStyle.copyWith(
-                        color: darkJungleGreenColor,
+                        color: eerieBlackColor,
                         fontSize:
                             Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
                       ),

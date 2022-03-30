@@ -5,9 +5,9 @@ class UsersModel {
     this.users,
   });
 
-  factory UsersModel.fromJson(Map<String, dynamic> json) {
+  factory UsersModel.fromJson(List json) {
     return UsersModel(
-      users: json['data'] ?? [],
+      users: json,
     );
   }
 

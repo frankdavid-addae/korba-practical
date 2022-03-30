@@ -1,6 +1,12 @@
+import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:korba_practical/classes/feedback_dialogs.dart';
 import 'package:korba_practical/constants.dart';
+import 'package:korba_practical/helpers.dart';
 import 'package:korba_practical/screens/auth/sign_in_screen.dart';
+import 'package:korba_practical/screens/home/home_screen.dart';
+import 'package:korba_practical/services/auth_api_requests.dart';
 import 'package:korba_practical/widgets/shared_widgets/custom_button.dart';
 import 'package:korba_practical/widgets/shared_widgets/custom_input_field.dart';
 
@@ -16,12 +22,14 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   final _signUpFormKey = GlobalKey<FormState>();
   final _keyLoader = GlobalKey<State>();
+  final _authApiRequest = GetIt.I.get<AuthApiRequest>();
+  final _feedbackDialog = GetIt.I.get<FeedbackDialog>();
   late TextEditingController _fullNameController;
   late TextEditingController _emailController;
   late TextEditingController _passwordController;
   AutovalidateMode _autoValidate = AutovalidateMode.disabled;
   bool isHidden = true;
-  bool btnLoginEnabled = true;
+  bool btnSignUpEnabled = true;
 
   @override
   void initState() {
@@ -79,13 +87,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   children: [
                     CustomInputField(
                       hintText: 'Full Name',
-                      controller: _emailController,
+                      controller: _fullNameController,
                       keyboardType: TextInputType.text,
                       suffixIcon: Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Icon(
                           Icons.person,
-                          color: darkJungleGreenColor,
+                          color: eerieBlackColor,
                           size: Constant.kSize(
                               mediaQueryHeight, 28.0, 26.0, 24.0),
                         ),
@@ -105,7 +113,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         padding: const EdgeInsets.all(12.0),
                         child: Icon(
                           Icons.email,
-                          color: darkJungleGreenColor,
+                          color: eerieBlackColor,
                           size: Constant.kSize(
                               mediaQueryHeight, 28.0, 26.0, 24.0),
                         ),
@@ -138,7 +146,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 size: Constant.kSize(
                                     mediaQueryHeight, 28.0, 26.0, 24.0),
                               ),
-                        color: darkJungleGreenColor,
+                        color: eerieBlackColor,
                         splashColor: Colors.transparent,
                       ),
                       validator: (String? value) {
@@ -155,10 +163,66 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 height: Constant.kSize(mediaQueryHeight, 20.0, 30.0, 40.0),
               ),
               CustomButton(
-                onPressed: () {},
+                onPressed: btnSignUpEnabled
+                    ? () async {
+                        if (_signUpFormKey.currentState!.validate()) {
+                          _toggleButtonState(false);
+                          _feedbackDialog.loadingDialog(context, _keyLoader);
+
+                          if (await ConnectivityWrapper.instance.isConnected) {
+                            var input = {
+                              "name": _fullNameController.text,
+                              "email": _emailController.text,
+                              "password": _passwordController.text,
+                            };
+
+                            var result =
+                                await _authApiRequest.signUp(context, input);
+                            if (result == 'success') {
+                              Navigator.of(
+                                _keyLoader.currentContext!,
+                                rootNavigator: true,
+                              ).pop();
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                HomeScreen.routeName,
+                                (route) => false,
+                              );
+                              _toggleButtonState(true);
+                            } else {
+                              await Future.delayed(
+                                Duration(milliseconds: Helpers.milliSeconds),
+                              );
+                              Navigator.of(
+                                _keyLoader.currentContext!,
+                                rootNavigator: true,
+                              ).pop();
+                              _feedbackDialog.errorDialog(
+                                context,
+                                result.toString(),
+                              );
+                              _toggleButtonState(true);
+                            }
+                          } else {
+                            await Future.delayed(
+                              Duration(milliseconds: Helpers.milliSeconds),
+                            );
+                            Navigator.of(
+                              _keyLoader.currentContext!,
+                              rootNavigator: true,
+                            ).pop();
+                            _feedbackDialog.internetError(context);
+                            _toggleButtonState(true);
+                          }
+                        } else {
+                          setState(() => _autoValidate =
+                              AutovalidateMode.onUserInteraction);
+                        }
+                      }
+                    : () {},
                 elevation: 2.0,
                 text: 'SIGN UP',
-                color: darkJungleGreenColor,
+                color: eerieBlackColor,
                 textStyle: smallTextStyle.copyWith(
                   color: whiteColor,
                   fontSize: Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
@@ -179,7 +243,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     text: TextSpan(
                       text: 'Already have an account? ',
                       style: smallTextStyle.copyWith(
-                        color: darkJungleGreenColor,
+                        color: eerieBlackColor,
                         fontSize:
                             Constant.kSize(mediaQueryHeight, 17.0, 16.0, 15.0),
                       ),
@@ -206,6 +270,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void _toggleButtonState(bool state) {
-    setState(() => btnLoginEnabled = state);
+    setState(() => btnSignUpEnabled = state);
   }
 }

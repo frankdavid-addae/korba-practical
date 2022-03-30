@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:korba_practical/constants.dart';
 import 'package:korba_practical/models/auth_user_model.dart';
+import 'package:korba_practical/models/users_model.dart';
 import 'package:korba_practical/providers/auth_user_provider.dart';
+import 'package:korba_practical/providers/users_provider.dart';
 import 'package:korba_practical/route_generator.dart';
 import 'package:korba_practical/screens/auth/sign_in_screen.dart';
 import 'package:korba_practical/screens/home/home_screen.dart';
@@ -24,6 +26,9 @@ Future<void> main() async {
   await _sharedPrefStore.reloadData();
   Map<String, dynamic>? authUserData =
       await _sharedPrefStore.retrieveDecodeData('authUserData');
+  List? usersData =
+      await _sharedPrefStore.retrieveDecodeDynamicData('usersData');
+  print(usersData);
 
   runApp(
     MultiProvider(
@@ -33,9 +38,10 @@ Future<void> main() async {
               AuthUserProvider(AuthUserModel.fromJson(authUserData!)),
           // AuthUserProvider(isLoggedIn ? UserModel.fromJson(userData!) : null),
         ),
-        // ChangeNotifierProvider<AppProvider>(
-        //   create: (context) => AppProvider(),
-        // ),
+        ChangeNotifierProvider<UsersProvider>(
+          create: (context) =>
+              UsersProvider(UsersModel.fromJson(usersData ?? [])),
+        ),
       ],
       child: const KorbaPracticalApp(),
     ),
@@ -51,7 +57,7 @@ class KorbaPracticalApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Korba Practical',
       theme: ThemeData(
-        primaryColor: darkJungleGreenColor,
+        primaryColor: eerieBlackColor,
       ),
       builder: (context, widget) => ResponsiveWrapper.builder(
         BouncingScrollWrapper.builder(context, widget!),
