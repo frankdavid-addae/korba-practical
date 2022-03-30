@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.korba_practical">
-   <application
-        android:label="korba_practical"
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:label="Korba Practical"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

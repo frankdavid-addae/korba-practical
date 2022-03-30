@@ -25,6 +25,11 @@ const fS36 = 36.0 * multiplier;
 
 const whiteColor = Color(0xFFFFFFFF);
 const blackColor = Color(0xFF000000);
+const silverSandColor = Color(0xFFC8CACB);
+const graniteGrayColor = Color(0xFF5F646A);
+const redMunsellColor = Color(0xFFED1944);
+const neonGreenColor = Color(0xFF42EC18);
+const darkJungleGreenColor = Color(0xFF051101);
 
 class ImageStrings {
   // static String topRightCornerImg = 'assets/images/top_right_corner.png';
@@ -58,18 +63,18 @@ const kPagePadding = 20.0;
 const leftAndRightScreenPadding =
     EdgeInsets.only(left: kPagePadding, right: kPagePadding);
 
-TextStyle bigTextStyle = GoogleFonts.poppins(
+TextStyle bigTextStyle = GoogleFonts.montserrat(
   color: blackColor,
   fontSize: 24.0,
   fontWeight: FontWeight.w500,
 );
 
-TextStyle mediumTextStyle = GoogleFonts.poppins(
+TextStyle mediumTextStyle = GoogleFonts.montserrat(
   color: blackColor,
   fontSize: 20.0,
 );
 
-TextStyle smallTextStyle = GoogleFonts.poppins(
+TextStyle smallTextStyle = GoogleFonts.montserrat(
   color: blackColor,
   fontSize: 15.0,
 );
