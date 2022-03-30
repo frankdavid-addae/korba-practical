@@ -141,4 +141,36 @@ class UsersApiRequest {
       return 'Something went wrong. Try again.';
     }
   }
+
+  Future<dynamic> createUser(
+      BuildContext context, String token, var input) async {
+    Map<String, String> requestHeaders = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+    };
+    try {
+      final url = Uri.parse(usersBaseUrl + '/');
+
+      var response = await http
+          .post(url, headers: requestHeaders, body: jsonEncode(input))
+          .timeout(Duration(seconds: Helpers.timeOutSeconds));
+      var decodedData = jsonDecode(response.body);
+
+      log(decodedData.toString());
+      log(response.statusCode.toString());
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // log('Created');
+        return 'success';
+      } else {
+        return decodedData['Message'];
+      }
+      // ignore: unused_catch_clause
+    } on TimeoutException catch (t) {
+      return 'Could not reach server. Please check your internet connection!';
+    } catch (e) {
+      log(e.toString());
+      return 'Something went wrong. Try again.';
+    }
+  }
 }
