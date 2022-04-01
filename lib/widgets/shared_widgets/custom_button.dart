@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
   final TextStyle textStyle;
   final Color? disabledColor;
   final Color? borderColor;
-  final double? elevation;
+  final double elevation;
 
   const CustomButton({
     Key? key,
@@ -24,7 +24,7 @@ class CustomButton extends StatelessWidget {
     this.disabledColor,
     this.borderColor = Colors.transparent,
     this.height = 35.0,
-    this.elevation,
+    this.elevation = 0.0,
   }) : super(key: key);
 
   @override
@@ -32,7 +32,7 @@ class CustomButton extends StatelessWidget {
     double mediaQueryHeight = MediaQuery.of(context).size.height;
 
     return Material(
-      elevation: elevation!,
+      elevation: elevation,
       shape: RoundedRectangleBorder(
         side: BorderSide(width: 1.0, color: borderColor!),
         borderRadius: BorderRadius.circular(

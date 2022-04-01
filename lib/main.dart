@@ -37,13 +37,15 @@ Future<void> main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<AuthUserProvider>(
-          create: (context) =>
-              AuthUserProvider(AuthUserModel.fromJson(authUserData!)),
+          create: (context) => AuthUserProvider(
+            isLoggedIn ? AuthUserModel.fromJson(authUserData!) : null,
+          ),
           // AuthUserProvider(isLoggedIn ? UserModel.fromJson(userData!) : null),
         ),
         ChangeNotifierProvider<UsersProvider>(
-          create: (context) =>
-              UsersProvider(UsersModel.fromJson(usersData ?? [])),
+          create: (context) => UsersProvider(
+            UsersModel.fromJson(usersData ?? []),
+          ),
         ),
       ],
       child: KorbaPracticalApp(isLoggedIn: isLoggedIn),
